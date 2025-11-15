@@ -30,7 +30,7 @@ class GeminiValidator:
         
         # Rate limiting: evitar exceder límites de API
         self.ultima_llamada = 0
-        self.min_tiempo_entre_llamadas = 1  # 1 segundo entre llamadas
+        self.min_tiempo_entre_llamadas = 0.2
     
     def _esperar_rate_limit(self):
         """
@@ -271,7 +271,7 @@ Responde SOLO con la sugerencia, sin formato adicional.
         
         # Preparar resumen de items para IA
         items_resumidos = []
-        for i, item in enumerate(items[:10]):  # Máximo 10 items para no saturar
+        for i, item in enumerate(items[:7]):  # Máximo 10 items para no saturar
             items_resumidos.append({
                 "numero": i + 1,
                 "descripcion": item.get("Description", "")[:100],
