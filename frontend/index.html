@@ -66,7 +66,7 @@
     <div class="max-w-7xl mx-auto">
       <!-- ====================================== Barra de navegación lateral izquierda ====================================== -->
       <aside
-        class="fixed left-0 top-0 h-full w-56 bg-[rgb(var(--color-secondary-800))] border-r border-[rgb(var(--color-secondary-700))] flex flex-col"
+        class="hidden md:block fixed left-0 top-0 h-full w-56 bg-[rgb(var(--color-secondary-800))] border-r border-[rgb(var(--color-secondary-700))] flex flex-col"
       >
         <!-- Logo -->
         <div
@@ -142,27 +142,10 @@
             <span class="text-sm font-medium">Configuración</span>
           </a>
         </nav>
-
-        <!-- Usuario -->
-        <div class="p-4 border-t border-[rgb(var(--color-secondary-700))]">
-          <div class="flex items-center space-x-3">
-            <div
-              class="w-10 h-10 rounded-full bg-[rgb(var(--color-primary-400))] flex items-center justify-center text-white font-semibold"
-            >
-              EX
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-white">Nombre ejemplo</p>
-              <p class="text-xs text-[rgb(var(--color-secondary-400))]">
-                Plan actual: Trial Premium
-              </p>
-            </div>
-          </div>
-        </div>
       </aside>
     </div>
 
-    <main class="ml-56">
+    <main class="md:ml-56">
       <!-- Encabezado -->
       <header
         class="max-h-20 bg-[rgb(var(--color-secondary-800))] border-b border-[rgb(var(--color-secondary-700))] px-6 py-2"
