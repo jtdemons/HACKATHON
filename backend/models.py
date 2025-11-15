@@ -1,61 +1,172 @@
 from pydantic import BaseModel, field_validator
-from typing import List, Optional
-from datetime import date
+from typing import List, Optional, Dict, Any
+from datetime import date, datetime
+
 
 class ItemFactura(BaseModel):
-    descripcion: str
-    cantidad: float
-    precio_unitario: float
-    precio_total: float
+   
+    SKU: Optional[str] = ""
+    Description: Optional[str] = ""
+    Quantity: Optional[str] = ""
+    UnitOfMeasurement: Optional[str] = "" # Opcional indica que se deja vacio si el campo en el archivo JSON esta vacio
+    UnitPrice: Optional[str] = ""
+    NetValuePerItem: Optional[str] = ""
+    Currency: Optional[str] = ""
+    HSCode: Optional[str] = ""
+    Weight: Optional[str] = ""
+    BatchOrLotNumber: Optional[str] = ""
+    NumberOfPackagesBoxes: Optional[str] = ""
     
-    @field_validator('precio_total')
-    def validar_total_item(cls, v, info):
-        if 'cantidad' in info.data and 'precio_unitario' in info.data:
-            calculado = round(info.data['cantidad'] * info.data['precio_unitario'], 2)
-            if abs(calculado - v) > 0.01:
-                raise ValueError(f'Total del item no coincide: {calculado} vs {v}')
-        return v
+    def get_quantity_float(self) -> float:
+        try:
+            return float(self.Quantity.replace(",", ""))
+        except:
+            return 0.0
+    
+    def get_unit_price_float(self) -> float:
+        try:
+            return float(self.UnitPrice.replace(",", ""))
+        except:
+            return 0.0
+    
+    def get_net_value_float(self) -> float:
+        try:
+            return float(self.NetValuePerItem.replace(",", ""))
+        except:
+            return 0.0
+
+
+class Field(BaseModel):
+
+    Fields: str
+    Value: str
+
 
 class FacturaComercial(BaseModel):
-    numero_factura: str
-    fecha_expedicion: date
-    lugar_expedicion: str
-    nombre_vendedor: str
-    direccion_vendedor: str
-    pais_vendedor: str
-    nombre_comprador: str
-    direccion_comprador: str
-    ciudad_comprador: str
-    items: List[ItemFactura]
-    precio_neto_factura: float
-    moneda: str
-    incoterm: str
-    lugar_entrega: str
-    descuentos: Optional[float] = 0
-    concepto_descuento: Optional[str] = None
-    gastos_transporte: Optional[float] = 0
-    costo_seguro: Optional[float] = 0
-    es_original: bool = True
-    es_definitiva: bool = True
+
+    Fields: List[Field]
+    Table: List[ItemFactura]
     
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "numero_factura": "INV-2025-001",
-                "fecha_expedicion": "2025-11-01",
-                "lugar_expedicion": "Shanghai, China",
-                "nombre_vendedor": "Supplier Ltd",
-                "direccion_vendedor": "123 Business St",
-                "pais_vendedor": "China",
-                "nombre_comprador": "Importadora Colombia",
-                "direccion_comprador": "Calle 100 No 10",
-                "ciudad_comprador": "Bogotá",
-                "items": [{"descripcion": "Componentes", "cantidad": 100, "precio_unitario": 10.00, "precio_total": 1000.00}],
-                "precio_neto_factura": 1000.00,
-                "moneda": "USD",
-                "incoterm": "FOB",
-                "lugar_entrega": "Puerto Shanghai",
-                "es_original": True,
-                "es_definitiva": True
-            }
+    #Extraer campos
+    
+    def get_field(self, nombre: str) -> str:
+        for field in self.Fields:
+            if field.Fields == nombre:
+                return field.Value
+        return ""
+    
+    # ==================== PROPIEDADES PARA ACCESO RÁPIDO ====================
+    
+    @property
+    def supplier(self) -> str:
+        return self.get_field("Supplier")
+    
+    @property
+    def customer(self) -> str:
+        return self.get_field("Customer")
+    
+    @property
+    def supplier_address(self) -> str:
+        return self.get_field("SupplierAddress")
+    
+    @property
+    def customer_address(self) -> str:
+        return self.get_field("CustomerAddress")
+    
+    @property
+    def supplier_tax_id(self) -> str:
+        return self.get_field("SupplierTaxID")
+    
+    @property
+    def customer_tax_id(self) -> str:
+        return self.get_field("CustomerTaxID")
+    
+    @property
+    def invoice_number(self) -> str:
+        return self.get_field("InvoiceNumber")
+    
+    @property
+    def invoice_date(self) -> str:
+        return self.get_field("InvoiceDate")
+    
+    @property
+    def incoterm(self) -> str:
+        return self.get_field("Incoterm")
+    
+    @property
+    def currency(self) -> str:
+        return self.get_field("Currency")
+    
+    @property
+    def total_invoice_value(self) -> str:
+        return self.get_field("TotalInvoiceValue")
+    
+    @property
+    def invoice_type(self) -> str:
+        return self.get_field("InvoiceType")
+    
+    @property
+    def port_of_loading(self) -> str:
+        return self.get_field("PortOfLoading")
+    
+    @property
+    def port_of_discharge(self) -> str:
+        return self.get_field("PortOfDischarge")
+    
+    @property
+    def country_of_origin(self) -> str:
+        return self.get_field("CountryOfOrigin")
+    
+    @property
+    def payment_terms(self) -> str:
+        return self.get_field("PaymentTerms")
+    
+    #Metodos de conversion
+    
+    def get_total_float(self) -> float:
+        try:
+            return float(self.total_invoice_value.replace(",", ""))
+        except:
+            return 0.0
+    
+    def parse_date(self) -> Optional[date]:
+        date_str = self.invoice_date.strip()
+        if not date_str:
+            return None
+        
+        # Lista de formatos de fecha a intentar
+        formats = [
+            "%Y-%m-%d",           # 2025-01-29
+            "%m/%d/%Y",           # 12/23/2024
+            "%d-%b-%Y",           # 07-MAY-2025
+            "%d/%m/%Y"            # 29/01/2025
+        ]
+        
+        for fmt in formats:
+            try:
+                return datetime.strptime(date_str, fmt).date()
+            except:
+                continue
+        
+        return None
+    
+    #Metodo exportar
+    
+    def to_simple_dict(self) -> Dict:
+        
+        return {
+            "supplier": self.supplier,
+            "customer": self.customer,
+            "supplier_address": self.supplier_address,
+            "customer_address": self.customer_address,
+            "invoice_number": self.invoice_number,
+            "invoice_date": self.invoice_date,
+            "incoterm": self.incoterm,
+            "currency": self.currency,
+            "country_of_origin": self.country_of_origin,
+            "total_value": self.total_invoice_value,
+            "port_of_loading": self.port_of_loading,
+            "port_of_discharge": self.port_of_discharge,
+            "items_count": len(self.Table),
+            "payment_terms": self.payment_terms
         }
