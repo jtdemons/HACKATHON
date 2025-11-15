@@ -1,8 +1,3 @@
-"""
-gemini_validator.py - Validador inteligente usando Gemini AI
-Analiza facturas con IA para detectar problemas que las reglas fijas no pueden capturar
-"""
-
 import google.generativeai as genai
 from typing import Dict, List, Optional
 import json
@@ -11,12 +6,12 @@ import time
 
 class GeminiValidator:
     """
-    Validador inteligente que usa Gemini AI para análisis avanzado de facturas.
+    Validador inteligente que usa Gemini AI para análisis de facturas.
     """
     
     def __init__(self, api_key: str):
         """
-        Inicializa el validador con la API key de Gemini.
+        Se crea el constructor para iniciar la configuración de Gemini AI
         
         Args:
             api_key: API key de Google Gemini
@@ -30,19 +25,19 @@ class GeminiValidator:
         
         # Rate limiting: evitar exceder límites de API
         self.ultima_llamada = 0
-        self.min_tiempo_entre_llamadas = 0.2
+        self.min_tiempo_entre_llamadas = 0.05
     
-    def _esperar_rate_limit(self):
-        """
-        Implementa rate limiting para no exceder límites de la API.
-        """
-        tiempo_actual = time.time()
-        tiempo_transcurrido = tiempo_actual - self.ultima_llamada
+    # def _esperar_rate_limit(self):
+    #     """
+    #     Implementa un límite de llamadas para no exceder la capacidad de la API.
+    #     """
+    #     tiempo_actual = time.time()
+    #     tiempo_transcurrido = tiempo_actual - self.ultima_llamada
         
-        if tiempo_transcurrido < self.min_tiempo_entre_llamadas:
-            time.sleep(self.min_tiempo_entre_llamadas - tiempo_transcurrido)
+    #     if tiempo_transcurrido < self.min_tiempo_entre_llamadas:
+    #         time.sleep(self.min_tiempo_entre_llamadas - tiempo_transcurrido)
         
-        self.ultima_llamada = time.time()
+    #     self.ultima_llamada = time.time()
     
     def _limpiar_respuesta_json(self, texto: str) -> str:
         """
@@ -86,7 +81,7 @@ class GeminiValidator:
                 "sugerencia": str
             }
         """
-        self._esperar_rate_limit()
+        # self._esperar_rate_limit()
         
         prompt = f"""
 Eres un experto en comercio internacional y normativa aduanera colombiana (DIAN).
@@ -105,9 +100,9 @@ Una descripción válida según la DIAN debe incluir:
 5. Composición o ingredientes principales (si aplica)
 
 Criterios de evaluación:
-- ❌ INVÁLIDO: Descripciones genéricas como "productos", "mercancía", "items"
-- ⚠️ INSUFICIENTE: Solo nombre sin detalles técnicos
-- ✅ VÁLIDO: Nombre + marca/modelo + características técnicas
+- INVÁLIDO: Descripciones genéricas como "productos", "mercancía", "items"
+- INSUFICIENTE: Solo nombre sin detalles técnicos
+- VÁLIDO: Nombre + marca/modelo + características técnicas
 
 Responde ÚNICAMENTE en formato JSON válido con esta estructura exacta:
 {{
@@ -152,7 +147,7 @@ Responde ÚNICAMENTE en formato JSON válido con esta estructura exacta:
                 "advertencias": List[str]
             }
         """
-        self._esperar_rate_limit()
+        # self._esperar_rate_limit()
         
         # Preparar datos para enviar a IA (solo lo esencial)
         datos_simplificados = {
@@ -235,7 +230,7 @@ Si todo está bien, usa listas vacías para problemas y advertencias.
         Returns:
             str: Sugerencia de corrección
         """
-        self._esperar_rate_limit()
+        # self._esperar_rate_limit()
         
         prompt = f"""
 Campo de factura con error: {campo}
@@ -267,7 +262,7 @@ Responde SOLO con la sugerencia, sin formato adicional.
         Returns:
             Dict con análisis de precios
         """
-        self._esperar_rate_limit()
+        # self._esperar_rate_limit()
         
         # Preparar resumen de items para IA
         items_resumidos = []
