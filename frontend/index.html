@@ -38,6 +38,27 @@
           --color-secondary-900: 15 23 42;
         }
       }
+      /* Animaciones */
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .animate-slide-in {
+        animation: slide-in 0.3s ease-out;
+      }
+
+      .animate-slide-out {
+        animation: slide-out 0.3s ease-in;
+      }
+
+      .animate-fade-in {
+        animation: fade-in 0.5s ease-out;
+      }
     </style>
   </head>
   <body class="bg-[rgb(var(--color-secondary-900))] text-white">
@@ -179,10 +200,10 @@
             <div
               class="w-8 h-8 rounded-full bg-[rgb(var(--color-primary-800))] flex items-center justify-center text-[rgb(var(--color-primary-500))] text-sm font-semibold"
             >
-              AP
+              EX
             </div>
             <span class="text-sm text-[rgb(var(--color-secondary-200))] font-medium"
-              >Antonio Perez</span
+              >Nombre Ejemplo</span
             >
           </div>
         </div>
@@ -203,10 +224,11 @@
           class="bg-[rgb(var(--color-secondary-800))] rounded-lg p-6 border border-[rgb(var(--color-secondary-700))]"
         >
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-white">Cambiar por la salida de las facturas</h2>
+            <h2 class="text-3xl font-bold mb-6 text-white">
+              <i class="fas fa-chart-pie"></i> Resumen de Validación
+            </h2>
           </div>
-          <p class="text-sm text-secondary-400">Resultados</p>
-          <div id="resultados"></div>
+          <div id="resumen"></div>
         </div>
 
         <!-- Tabla de facturas analizadas-->
@@ -250,6 +272,7 @@
           <div>
             <p class="block text-sm font-medium text-white mb-2">columnas y filas de la tabla</p>
             <div id="requisitos" class="hidden mb-8"></div>
+            <div id="resultados"></div>
           </div>
         </div>
       </div>
