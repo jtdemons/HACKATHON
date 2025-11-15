@@ -6,6 +6,11 @@ const API_URL = "http://localhost:8000";
 async function verRequisitos() {
   const div = document.getElementById("requisitos");
 
+  if (!div.classList.contains("hidden")) {
+    div.classList.add("hidden");
+    return;
+  }
+
   try {
     const response = await fetch(`${API_URL}/requisitos`);
     const data = await response.json();
