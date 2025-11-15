@@ -89,7 +89,7 @@ class ValidadorDIAN:
         
         return resultado
     
-    # VALIDACIONES DETERMINÍSTICAS
+    # Validaciones individuales por campo de forma manual
     
     def _validar_tipo_documento(self, factura: FacturaComercial, resultado: Dict):
         """Valida que la factura sea definitiva (no pro forma)"""
@@ -140,8 +140,7 @@ class ValidadorDIAN:
             resultado["sugerencias"].append("Incluya dirección completa: calle, número, ciudad, país")
     
     def _validar_datos_comprador(self, factura: FacturaComercial, resultado: Dict):
-        """Valida completitud de datos del comprador (Customer)"""
-        # Nombre del comprador
+        """Valida completitud de datos del comprador (campo de Customer)"""
         if not factura.customer or len(factura.customer.strip()) < 3:
             resultado["cumple"] = False
             resultado["errores"].append({
@@ -150,14 +149,12 @@ class ValidadorDIAN:
                 "codigo": "DIAN_005"
             })
         
-        # Dirección del comprador
         if not factura.customer_address or len(factura.customer_address.strip()) < 5:
             resultado["advertencias"].append({
                 "campo": "CustomerAddress",
                 "mensaje": "La dirección del comprador debería ser más completa"
             })
         
-        # NIT del comprador (importante para Colombia)
         if not factura.customer_tax_id or factura.customer_tax_id.strip() == "":
             resultado["advertencias"].append({
                 "campo": "CustomerTaxID",
@@ -166,7 +163,6 @@ class ValidadorDIAN:
     
     def _validar_fecha(self, factura: FacturaComercial, resultado: Dict):
         """Valida coherencia de fecha de expedición"""
-        # Verificar que exista fecha
         if not factura.invoice_date or factura.invoice_date.strip() == "":
             resultado["cumple"] = False
             resultado["errores"].append({
@@ -176,13 +172,12 @@ class ValidadorDIAN:
             })
             return
         
-        # Intentar parsear fecha
+        # Se intenta parsear la fecha
         fecha_factura = factura.parse_date()
         
         if fecha_factura:
             hoy = date.today()
             
-            # Fecha no puede ser futura
             if fecha_factura > hoy:
                 resultado["cumple"] = False
                 resultado["errores"].append({
