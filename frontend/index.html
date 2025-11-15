@@ -5,96 +5,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Validador de Facturas - Hackathon</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                50: "#e6fff7",
-                100: "#ccfff0",
-                200: "#99ffe1",
-                300: "#66ffd2",
-                400: "#33ffc3",
-                500: "#00cc99",
-                600: "#00a37a",
-                700: "#007a5c",
-                800: "#00523d",
-                900: "#00291f",
-              },
-              secondary: {
-                50: "#f8fafc",
-                100: "#f1f5f9",
-                200: "#e2e8f0",
-                300: "#cbd5e1",
-                400: "#94a3b8",
-                500: "#64748b",
-                600: "#475569",
-                700: "#334155",
-                800: "#1e293b",
-                900: "#0f172a",
-              },
-            },
-          },
-        },
-      };
-    </script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- Colores personalizados usando paleta de Colores - KILA -->
+    <style type="text/tailwindcss">
+      @layer base {
+        :root {
+          /* Colores principales (elementos principales) */
+          --color-primary-50: 230 255 247;
+          --color-primary-100: 204 255 240;
+          --color-primary-200: 153 255 225;
+          --color-primary-300: 102 255 210;
+          --color-primary-400: 51 255 195;
+          --color-primary-500: 0 204 153;
+          --color-primary-600: 0 163 122;
+          --color-primary-700: 0 122 92;
+          --color-primary-800: 0 82 61;
+          --color-primary-900: 0 41 31;
+
+          /* Colores Secundarios (elementos neutrales) */
+          --color-secondary-50: 248 250 252;
+          --color-secondary-100: 241 245 249;
+          --color-secondary-200: 226 232 240;
+          --color-secondary-300: 203 213 225;
+          --color-secondary-400: 148 163 184;
+          --color-secondary-500: 100 116 139;
+          --color-secondary-600: 71 85 105;
+          --color-secondary-700: 51 65 85;
+          --color-secondary-800: 30 41 59;
+          --color-secondary-900: 15 23 42;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen text-white p-4">
+  <body class="bg-[rgb(var(--color-secondary-900))] text-white">
     <div class="max-w-7xl mx-auto">
-      <!-- Header -->
-      <header class="mb-8 pt-8">
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-4">
-            <div class="bg-blue-600 p-4 rounded-xl">
-              <i class="fas fa-file-invoice-dollar text-3xl"></i>
+      <!-- ====================================== Barra de navegación lateral izquierda ====================================== -->
+      <aside
+        class="fixed left-0 top-0 h-full w-56 bg-[rgb(var(--color-secondary-800))] border-r border-[rgb(var(--color-secondary-700))] flex flex-col"
+      >
+        <!-- Logo -->
+        <div
+          class="max-h-20 p-4 flex items-center justify-between border-b border-[rgb(var(--color-secondary-700))]"
+        >
+          <div class="flex items-center space-x-2">
+            <img src="/img/kila.png" class="w-8 h-8" alt="Logo de Kila" />
+            <span class="text-xl font-bold">Kila</span>
+          </div>
+        </div>
+
+        <!-- Letrero de actualización -->
+        <div class="mx-3 my-3">
+          <div class="text-[rgb(var(--color-secondary-50))] text-sm">
+            <div class="flex items-center justify-between text-primary-400">
+              <span>¡Consulta nuevas actualizaciones!</span>
             </div>
-            <div>
-              <h1 class="text-4xl font-bold">Validador de Facturas DIAN</h1>
-              <p class="text-gray-400 mt-1">Sistema de validación para importación de mercancías</p>
+            <button
+              class="mt-2 bg-[rgb(var(--color-primary-800))] rounded-lg border border-[rgb(var(--color-primary-700))] p-2 flex items-center justify-between w-full text-[rgb(var(--color-primary-200))] hover:text-[rgb(var(--color-primary-400))] transition"
+            >
+              <span class="text-sm">Versión 1.3.0</span>
+              <span>></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Navegación -->
+        <nav class="flex-1 px-3 space-y-1">
+          <div
+            class="text-xs font-semibold text-[rgb(var(--color-secondary-400))] uppercase tracking-wider px-3 py-2"
+          >
+            Operaciones
+          </div>
+          <a
+            href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-[rgb(var(--color-secondary-400))]"
+          >
+            <!-- colocar icono -->
+            <span class="text-sm font-medium">Tracking Universal</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-[rgb(var(--color-secondary-400))]"
+          >
+            <!-- colocar icono -->
+            <span class="text-sm font-medium">Embarques</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-[rgb(var(--color-secondary-400))]"
+          >
+            <!-- colocar icono -->
+            <span class="text-sm font-medium">Cotizaciones</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white border border-[rgb(var(--color-primary-500))]"
+          >
+            <!-- colocar icono -->
+            <span class="text-sm font-medium">Validaciones</span>
+          </a>
+
+          <div
+            class="text-xs font-semibold text-[rgb(var(--color-secondary-400))] uppercase tracking-wider px-3 py-2"
+          >
+            Sistema
+          </div>
+          <a
+            href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-[rgb(var(--color-secondary-400))]"
+          >
+            <!-- colocar icono -->
+            <span class="text-sm font-medium">Configuración</span>
+          </a>
+        </nav>
+
+        <!-- Perfil de usuario -->
+        <div class="p-4 border-t border-[rgb(var(--color-secondary-700))]">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 rounded-full bg-[rgb(var(--color-primary-400))] flex items-center justify-center text-white font-semibold"
+            >
+              EX
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-white">Nombre ejemplo</p>
+              <p class="text-xs text-[rgb(var(--color-secondary-400))]">
+                Plan actual: Trial Premium
+              </p>
             </div>
           </div>
         </div>
-        <p class="text-sm text-gray-500">Cartilla CT-COA-0124 | Resolución Andina 1684/2014</p>
+      </aside>
+    </div>
+
+    <!-- ====================================== Contenido principal ====================================== -->
+
+    <main class="ml-56">
+      <!-- Encabezado -->
+      <header
+        class="max-h-20 bg-[rgb(var(--color-secondary-800))] border-b border-[rgb(var(--color-secondary-700))] px-6 py-2"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4 flex-1">
+            <div
+              class="flex items-center space-x-2 bg-[rgb(var(--color-secondary-900))] rounded-lg px-3 py-2 border border-[rgb(var(--color-secondary-700))]"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-[rgb(var(--color-primary-600))] flex items-center justify-center text-white text-xs font-bold"
+              >
+                D
+              </div>
+              <span class="text-sm font-medium">DWP CORPORATION</span>
+              <!-- agregar icono -->
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="relative flex-1 max-w-xl">
+              <input
+                type="text"
+                placeholder="Buscar embarques, reportes..."
+                class="w-full bg-[rgb(var(--color-secondary-900))] border border-[rgb(var(--color-secondary-700))] rounded-lg px-4 py-2 pl-10 text-sm text-white placeholder-[rgb(var(--color-secondary-400))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-primary-500))] focus:border-transparent"
+              />
+              <!-- agregar icono -->
+            </div>
+            <button class="p-2">
+              <span class="text-2xl">🇪🇸</span>
+            </button>
+            <button class="p-2 text-secondary-400 hover:text-white">
+              <!-- agregar icono -->
+            </button>
+            <div
+              class="w-8 h-8 rounded-full bg-[rgb(var(--color-primary-800))] flex items-center justify-center text-[rgb(var(--color-primary-500))] text-sm font-semibold"
+            >
+              AP
+            </div>
+            <span class="text-sm text-[rgb(var(--color-secondary-200))] font-medium"
+              >Antonio Perez</span
+            >
+          </div>
+        </div>
       </header>
 
-      <!-- Botones de acción -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <button
-          onclick="verRequisitos()"
-          class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-4 rounded-xl shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-3 font-semibold"
-        >
-          <i class="fas fa-list-check text-xl"></i>
-          <span>Ver Requisitos</span>
-        </button>
+      <!-- Area del validador -->
+      <div class="p-6 space-y-6">
+        <!-- Título -->
+        <div>
+          <h1 class="text-3xl font-bold text-white">Validador de facturas</h1>
+          <p class="text-[rgb(var(--color-secondary-400))] mt-1">
+            Validador de facturas comerciales de importación con integración IA
+          </p>
+        </div>
 
-        <button
-          onclick="descargarEjemplo()"
-          class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-4 rounded-xl shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-3 font-semibold"
+        <!-- Queries Card -->
+        <div
+          class="bg-[rgb(var(--color-secondary-800))] rounded-lg p-6 border border-[rgb(var(--color-secondary-700))]"
         >
-          <i class="fas fa-download text-xl"></i>
-          <span>Descargar Ejemplo</span>
-        </button>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-white">Cambiar por la salida de las facturas</h2>
+          </div>
+          <p class="text-sm text-secondary-400">Resultados</p>
+          <div id="resultados"></div>
+        </div>
 
-        <label
-          class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 py-4 rounded-xl shadow-lg transition-all transform hover:scale-105 cursor-pointer flex items-center justify-center gap-3 font-semibold"
+        <!-- Tabla de facturas analizadas-->
+        <div
+          class="bg-[rgb(var(--color-secondary-800))] rounded-lg p-6 border border-[rgb(var(--color-secondary-700))] space-y-6"
         >
-          <i class="fas fa-upload text-xl"></i>
-          <span>Cargar Factura comercial de importación</span>
-          <input type="file" accept=".json" onchange="cargarJSON(event)" class="hidden" />
-        </label>
+          <!-- Menú de la tabla -->
+          <div class="flex justify-evenly text-sm mb-2">
+            <p class="flex-1 text-sm font-medium text-white">Tabla</p>
+            <div class="flex-1">
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <!-- Botones de acción -->
+                <button
+                  onclick="verRequisitos()"
+                  class="max-h-10 py-2 px-5 bg-[rgb(var(--color-primary-600))] hover:bg-[rgb(var(--color-primary-700))] text-white rounded-xl flex items-center justify-center gap-3 font-semibold"
+                >
+                  <i class="fas fa-list-check text-xl"></i>
+                  <span>Ver Requisitos</span>
+                </button>
+
+                <button
+                  onclick="descargarEjemplo()"
+                  class="max-h-10 py-2 px-3 bg-[rgb(var(--color-primary-600))] hover:bg-[rgb(var(--color-primary-700))] text-white rounded-xl flex items-center justify-center gap-3 font-semibold"
+                >
+                  <i class="fas fa-download text-xl"></i>
+                  <span>Descargar Ejemplo</span>
+                </button>
+
+                <label
+                  class="max-h-10 py-2 px-3 bg-[rgb(var(--color-primary-600))] hover:bg-[rgb(var(--color-primary-700))] text-white rounded-xl flex items-center justify-center gap-3 font-semibold"
+                >
+                  <i class="fas fa-upload text-xl"></i>
+                  <span>Cargar Factura</span>
+                  <input type="file" accept=".json" onchange="cargarJSON(event)" class="hidden" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Salida de la tabla -->
+          <div>
+            <p class="block text-sm font-medium text-white mb-2">columnas y filas de la tabla</p>
+            <div id="requisitos" class="hidden mb-8"></div>
+          </div>
+        </div>
       </div>
-
-      <!-- Requisitos (oculto inicialmente) -->
-      <div id="requisitos" class="hidden mb-8"></div>
-
-      <!-- Área de resultados -->
-      <div id="resultados"></div>
-    </div>
+    </main>
 
     <script src="app.js"></script>
   </body>
