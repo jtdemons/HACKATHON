@@ -84,69 +84,6 @@ async function verRequisitos() {
   }
 }
 
-// 📌Descarga un archivo JSON de ejemplo para pruebas
-
-function descargarEjemplo() {
-  const ejemplo = {
-    Fields: [
-      { Fields: "Supplier", Value: "Tech Supplies International Inc." },
-      { Fields: "Customer", Value: "Importadora Colombiana SAS" },
-      { Fields: "SupplierAddress", Value: "1234 Technology Ave, Silicon Valley, CA 94025, USA" },
-      { Fields: "CustomerAddress", Value: "Calle 100 No. 10-20, Bogotá, Colombia" },
-      { Fields: "CustomerTaxID", Value: "900123456-7" },
-      { Fields: "InvoiceNumber", Value: "INV-2025-001234" },
-      { Fields: "InvoiceDate", Value: "2025-11-10" },
-      { Fields: "Currency", Value: "USD" },
-      { Fields: "Incoterm", Value: "FOB" },
-      { Fields: "InvoiceType", Value: "Commercial Invoice" },
-      { Fields: "PortOfLoading", Value: "Los Angeles, CA" },
-      { Fields: "PortOfDischarge", Value: "Cartagena, Colombia" },
-      { Fields: "CountryOfOrigin", Value: "United States" },
-      { Fields: "TotalInvoiceValue", Value: "15000.00" },
-      { Fields: "PaymentTerms", Value: "NET 30" },
-    ],
-    Table: [
-      {
-        SKU: "TECH-001",
-        Description:
-          "Laptop Dell Latitude 5520, Intel Core i7-1185G7, 16GB RAM, 512GB SSD, pantalla 15.6 pulgadas",
-        Quantity: "50",
-        UnitOfMeasurement: "PCS",
-        UnitPrice: "250.00",
-        NetValuePerItem: "12500.00",
-        Currency: "USD",
-        HSCode: "8471.30.01.00",
-        Weight: "2.5 kg",
-      },
-      {
-        SKU: "TECH-002",
-        Description: "Mouse inalámbrico Logitech MX Master 3, ergonómico, bluetooth, color grafito",
-        Quantity: "100",
-        UnitOfMeasurement: "PCS",
-        UnitPrice: "25.00",
-        NetValuePerItem: "2500.00",
-        Currency: "USD",
-        HSCode: "8471.60.60.00",
-        Weight: "0.15 kg",
-      },
-    ],
-  };
-
-  try {
-    const blob = new Blob([JSON.stringify([ejemplo], null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "factura_ejemplo_valida.json";
-    a.click();
-    URL.revokeObjectURL(url);
-
-    mostrarMensaje("✅ Archivo de ejemplo descargado", "success");
-  } catch (error) {
-    mostrarError("Error al descargar ejemplo: " + error.message);
-  }
-}
-
 async function cargarJSON(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -194,7 +131,7 @@ function mostrarResultados(data) {
   const resumenHtml = `
                 <!-- Resumen -->
         <div class="border border-[rgb(var(--color-secondary-700))] rounded-xl shadow-xl p-8 mb-8">            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-blue-900 bg-opacity-50 border border-blue-500 p-6 rounded-xl text-center">
                     <div class="text-5xl font-bold text-blue-300 mb-2">${resumen.total}</div>
                     <div class="text-sm text-white">Total Facturas</div>
@@ -202,19 +139,12 @@ function mostrarResultados(data) {
                 
                 <div class="bg-green-900 bg-opacity-50 border border-green-500 p-6 rounded-xl text-center">
                     <div class="text-5xl font-bold text-green-300 mb-2">${resumen.aprobadas}</div>
-                    <div class="text-sm text-white">Aprobadas ✓</div>
+                    <div class="text-sm text-white">Aprobadas</div>
                 </div>
                 
                 <div class="bg-red-900 bg-opacity-50 border border-red-500 p-6 rounded-xl text-center">
                     <div class="text-5xl font-bold text-red-300 mb-2">${resumen.rechazadas}</div>
-                    <div class="text-sm text-white">Rechazadas ✗</div>
-                </div>
-                
-                <div class="bg-purple-900 bg-opacity-50 border border-purple-500 p-6 rounded-xl text-center">
-                    <div class="text-5xl font-bold text-purple-300 mb-2">${
-                      resumen.porcentaje
-                    }%</div>
-                    <div class="text-sm text-white">Cumplimiento</div>
+                    <div class="text-sm text-white">Rechazadas</div>
                 </div>
             </div>
             
