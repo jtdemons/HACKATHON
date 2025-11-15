@@ -30,7 +30,7 @@ class GeminiValidator:
         
         # Rate limiting: evitar exceder límites de API
         self.ultima_llamada = 0
-        self.min_tiempo_entre_llamadas = 0.2
+        self.min_tiempo_entre_llamadas = 0.05
     
     def _esperar_rate_limit(self):
         """
