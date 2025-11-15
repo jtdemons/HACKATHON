@@ -1,8 +1,3 @@
-"""
-validators.py - Motor de validación de facturas usando IA
-Valida facturas según la Cartilla CT-COA-0124 haciendo un análisis con Gemini
-"""
-
 from typing import Dict, List, Optional
 from models import FacturaComercial
 from datetime import date, timedelta
@@ -10,17 +5,9 @@ from gemini_validator import GeminiValidator
 
 
 class ValidadorDIAN:
-    """
-    El validador maneja reglas de la DIAN y validaciones hechas por gemini
-    """
-    
+
     def __init__(self, gemini_api_key: Optional[str] = None):
-        """
-        Inicializa el validador, opcionalmente con capacidades de IA.
-        
-        Args:
-            gemini_api_key: API key de Google Gemini (opcional)
-        """
+
         self.usa_ia = False
         self.gemini = None
         
@@ -35,22 +22,7 @@ class ValidadorDIAN:
                 self.usa_ia = False
     
     def validar(self, factura: FacturaComercial) -> Dict:
-        """
-        Valida una factura completa y retorna resultado detallado.
-        
-        Args:
-            factura: Objeto FacturaComercial a validar
-            
-        Returns:
-            Dict con estructura:
-            {
-                "cumple": bool,
-                "errores": List[Dict],
-                "advertencias": List[Dict],
-                "sugerencias": List[str],
-                "validacion_ia": Dict (si usa_ia=True)
-            }
-        """
+
         # Estructura de resultado
         resultado = {
             "cumple": True,
@@ -157,7 +129,7 @@ class ValidadorDIAN:
                 "mensaje": "La dirección del comprador debería ser más completa"
             })
         
-        # NIT del comprador (importante para Colombia)
+        # NIT del comprador
         if not factura.customer_tax_id or factura.customer_tax_id.strip() == "":
             resultado["advertencias"].append({
                 "campo": "CustomerTaxID",
@@ -206,10 +178,7 @@ class ValidadorDIAN:
             })
     
     def _validar_descripciones_items(self, factura: FacturaComercial, resultado: Dict):
-        """
-        Valida que las descripciones de mercancía sean suficientemente específicas.
-        Incluye validación con IA si está disponible.
-        """
+
         for idx, item in enumerate(factura.Table):
             descripcion = item.Description.strip()
             
@@ -226,7 +195,7 @@ class ValidadorDIAN:
                 )
                 continue
             
-            # VALIDACIÓN CON IA (si está disponible)
+            # VALIDACIÓN CON IA
             if self.usa_ia and self.gemini:
                 try:
                     cantidad = item.get_quantity_float()
@@ -255,7 +224,6 @@ class ValidadorDIAN:
                     print(f"⚠️ Error IA en item {idx}: {e}")
     
     def _validar_coherencia_valores(self, factura: FacturaComercial, resultado: Dict):
-        """Valida coherencia entre cantidades, precios y totales"""
         # Validar cada item individualmente
         for idx, item in enumerate(factura.Table):
             try:
@@ -290,7 +258,7 @@ class ValidadorDIAN:
             
             if total_factura > 0:
                 diferencia = abs(total_items - total_factura)
-                tolerancia = max(total_factura * 0.01, 2.0)  # 1% o mínimo $2
+                tolerancia = max(total_factura * 0.01, 2.0)  
                 
                 if diferencia > tolerancia:
                     resultado["advertencias"].append({
@@ -301,7 +269,7 @@ class ValidadorDIAN:
             pass
     
     def _validar_moneda(self, factura: FacturaComercial, resultado: Dict):
-        """Valida que se especifique moneda válida"""
+
         if not factura.currency or factura.currency.strip() == "":
             resultado["cumple"] = False
             resultado["errores"].append({
@@ -330,7 +298,7 @@ class ValidadorDIAN:
             })
             resultado["sugerencias"].append("Especifique el Incoterm (FOB, CIF, CIP, etc.)")
         else:
-            # Lista de Incoterms válidos (Incoterms 2020)
+            # Lista de Incoterms válidos
             incoterms_validos = [
                 "EXW", "FCA", "FAS", "FOB",  # Grupo E y F
                 "CFR", "CIF", "CPT", "CIP",  # Grupo C
@@ -345,7 +313,7 @@ class ValidadorDIAN:
                 })
     
     def _validar_puertos(self, factura: FacturaComercial, resultado: Dict):
-        """Valida que se especifiquen puertos de carga y descarga"""
+
         if not factura.port_of_loading or factura.port_of_loading.strip() == "":
             resultado["advertencias"].append({
                 "campo": "PortOfLoading",
@@ -359,7 +327,7 @@ class ValidadorDIAN:
             })
     
     def _validar_pais_origen(self, factura: FacturaComercial, resultado: Dict):
-        """Valida que se especifique país de origen"""
+
         if not factura.country_of_origin or factura.country_of_origin.strip() == "":
             resultado["advertencias"].append({
                 "campo": "CountryOfOrigin",
@@ -369,10 +337,7 @@ class ValidadorDIAN:
     # VALIDACIÓN CON IA 
     
     def _validar_con_ia(self, factura: FacturaComercial, resultado: Dict):
-        """
-        Realiza validaciones avanzadas usando Gemini AI.
-        Analiza coherencia general de la factura.
-        """
+
         if not self.gemini:
             return
         

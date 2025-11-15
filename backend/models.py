@@ -55,8 +55,6 @@ class FacturaComercial(BaseModel):
                 return field.Value
         return ""
     
-    # ==================== PROPIEDADES PARA ACCESO RÁPIDO ====================
-    
     @property
     def supplier(self) -> str:
         return self.get_field("Supplier")
@@ -121,7 +119,7 @@ class FacturaComercial(BaseModel):
     def payment_terms(self) -> str:
         return self.get_field("PaymentTerms")
     
-    #Metodos de conversion
+    #Metodos conversion
     
     def get_total_float(self) -> float:
         try:
@@ -134,7 +132,6 @@ class FacturaComercial(BaseModel):
         if not date_str:
             return None
         
-        # Lista de formatos de fecha a intentar
         formats = [
             "%Y-%m-%d",           # 2025-01-29
             "%m/%d/%Y",           # 12/23/2024
